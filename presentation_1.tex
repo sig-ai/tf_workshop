@@ -116,6 +116,10 @@
 \section{Basic Tensorflow}
 
 \begin{frame}
+  \Huge{\centerline{Basic Tensorflow}}
+\end{frame}
+
+\begin{frame}
   \frametitle{Remarks about Tensorflow}
   \begin{itemize}
   \item Quite overwhelming, especially for those new to the library.
@@ -157,51 +161,32 @@
   \end{itemize}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%
+% Define and Run Demo %
+%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}
-  \frametitle{Matrix Multiplication}
-  Let's attempt to compute $xy$ first.
+  \frametitle{Demo -- Calculations in Tensorflow}
+  \Huge{\centerline{\href{PLACEHOLDER}{PLACEHOLDER}}}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Matrix Multiplication}
+  \frametitle{Example -- Conclusions}
   \begin{itemize}
-  \item Easy in numpy.
-  \item Little more involved in Tensorflow.
+  \item In order to run any computation in Tensorflow, you need a \underline{Session}.
+    \begin{itemize}
+    \item You need to define the computational graph first
+    \item Then initalize your variables and session.
+    \end{itemize}
+  \item Tensorflow batching is very easy to do, and fast on GPUs
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Example}
-  Let's now calculate the rest of \textsc{Mean}$(xy + z)$, first in Numpy, then Tensorflow
-\end{frame}
+\section{Review: Supervised Learning}
 
 \begin{frame}
-  \frametitle{NumPy Example}
+  \Huge{\centerline{Review: Supervised Learning}}
 \end{frame}
-
-\begin{frame}
-  \frametitle{NumPy Example -- Conclusion}
-  \begin{itemize}
-  \item ``Works as expected''
-  \item Values are immediate
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Tensorflow Example}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Tensorflow Example -- Conclusion}
-  \begin{itemize}
-  \item Values are not immediate
-  \item You need to initialize variables
-  \item You need to initialize a session before you can retrieve values
-  \end{itemize}
-\end{frame}
-
-\section{Review: Supervised Learning} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
-% ------------------------------------------------
 
 \subsection{Review: Problem Statement}
 \begin{frame}
@@ -218,8 +203,29 @@
   \frametitle{Supervised Learning - Problem Statement}
   \begin{itemize}
   \item Idea: suppose there exists some function $f$, such that $f: a \rightarrow b$, essentially mapping our inputs $x$ to output $y$.
-  \item For the workshop today, this $f$ is a deep neural network.
+  \item For the workshop today, this $f$ is approximated by Tensorflow.
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Typical Deep Network Pipeline}
+  \tikzstyle{b} = [rectangle, draw, fill=blue!20, node distance=1cm, text width=6em, text centered, rounded corners, minimum height=2em, thick]
+  \tikzstyle{n} = [rectangle, draw, fill=purple!20, node distance=1cm, text width=6em, text centered, rounded corners, minimum height=2em, thick]
+  \tikzstyle{c} = [rectangle, draw, inner sep=0.5cm, dashed]
+
+  \begin{tikzpicture}[auto]
+    \node [b] (input) {Input $x_{i}, y_{i}$};
+    % Deep Network
+    \node [n, above right = 1cm of input] (deepnet) {Model $f$};
+
+    \node [b, right = 0.5cm of deepnet] (prediction) {Prediction $\hat{y_i}$};
+    \node [b, below right = 1cm of prediction] (loss) {Loss};
+
+    \draw [thick,->] (input) -- (deepnet) node [pos=0.5, below] {$x_i$};
+    \draw [thick,->] (deepnet) -- (prediction);
+    \draw [thick,->] (prediction) -- (loss) node [pos=0.2, below] {$\hat{y_i}$};
+    \draw [thick,->] (input) -- (loss) node [pos=0.5, below] {$y_i$};
+  \end{tikzpicture}
 \end{frame}
 
 \begin{frame}
@@ -236,33 +242,31 @@
   \end{figure}
 \end{frame}
 
-\subsection{Review: Deep Networks} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
+
+% ------------------------------------------------
+
+% ------------------------------------------------
+\section{Supervised Learning in Tensorflow}
+\subsection{Linear Regression/Classification}
+
 
 \begin{frame}
-  \frametitle{Typical Deep Network Pipeline}
-  \tikzstyle{b} = [rectangle, draw, fill=blue!20, node distance=1cm, text width=6em, text centered, rounded corners, minimum height=2em, thick]
-  \tikzstyle{n} = [rectangle, draw, fill=purple!20, node distance=1cm, text width=6em, text centered, rounded corners, minimum height=2em, thick]
-  \tikzstyle{c} = [rectangle, draw, inner sep=0.5cm, dashed]
+  \frametitle{Linear Regression/Classification}
+  \begin{block}{Linear Models}
+    If we have a series of points $x$ and $y$, then we want to fit the function
 
-  \begin{tikzpicture}[auto]
-    \node [b] (input) {Input $x_{i}, y_{i}$};
-    % Deep Network
-    \node [n, above right = 1cm of input] (deepnet) {Deep Network};
+    $$y = \alpha x + \beta$$
+    where we learn $\alpha$ and $\beta$, such that it is ``close'' to our desired point, $\hat{y}$.
 
-    \node [b, right = 0.5cm of deepnet] (prediction) {Prediction $\hat{y_i}$};
-    \node [b, below right = 1cm of prediction] (loss) {Loss};
-
-    \draw [thick,->] (input) -- (deepnet) node [pos=0.5, below] {$x_i$};
-    \draw [thick,->] (deepnet) -- (prediction);
-    \draw [thick,->] (prediction) -- (loss) node [pos=0.2, below] {$\hat{y_i}$};
-    \draw [thick,->] (input) -- (loss) node [pos=0.5, below] {$y_i$};
-  \end{tikzpicture}
+    Intuition: Fitting 2D points to a line.
+  \end{block}
 \end{frame}
 
-% ------------------------------------------------
+\begin{frame}
+  \frametitle{Tensorflow \& Linear Models}
+  You can think of a 1 layer neural network with biases, as a special case of a linear model!
+\end{frame}
 
-% ------------------------------------------------
-\section{Classification in Tensorflow}
 \subsection{Loss Functions}
 \begin{frame}
   \frametitle{MSE Loss}
@@ -271,6 +275,7 @@
     $$\text{minimize } \frac{1}{n}\sum_{i=0}^{n}(f(x_i) - y_i)^2$$
   \end{block}
 \end{frame}
+
 \begin{frame}
   \frametitle{Cross Entropy Loss Function}
   \begin{block}{Cross Entropy Loss Function}
@@ -281,8 +286,70 @@
   \end{block}
 \end{frame}
 
-\section{Tensorflow }
 \begin{frame}
+  \frametitle{Demo -- Linear Regression and Classification}
+  \Huge{\centerline{\href{PLACEHOLDER}{PLACEHOLDER}}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Linear Regression and Classification -- Conclusion}
+  \begin{itemize}
+  \item \underline{Placeholders} can be used to dynamically set the values of tensors at runtime.
+  \item In Tensorflow, we use \underline{Variables} to define what we want to learn.
+  \item Optimizers can automatically differentiate Variables.
+  \end{itemize}
+\end{frame}
+
+\section{LeNet}
+\begin{frame}
+  \huge{\centerline{LeNet}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LeNet Architecture}
+  \begin{center}
+    \includegraphics[width=1.0\linewidth]{LeNet.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LeNet Architecture (in more detail)}
+  \tikzstyle{c} = [rectangle, draw, fill=blue!20, node distance=1cm, text width=6em, text centered]
+  \tikzstyle{p} = [rectangle, draw, fill=purple!20, node distance=1cm, text width=6em, text centered]
+  \tikzstyle{f} = [rectangle, draw, fill=green!20, node distance=1cm, text width=6em, text centered]
+  \tikzstyle{a} = [rectangle, draw, fill=red!20, node distance=1cm, text width=6em, text centered]
+
+  \begin{center}
+    \begin{tikzpicture}[scale=0.3, every node/.style={transform shape}]
+      \node [c] (conv2d_1) {Conv2d, 1$\rightarrow$6, 5x5, padding=0};
+      \node [a, below = 0.5cm of conv2d_1] (relu_1) {ReLU};
+      \node [p, below = 0.5cm of relu_1] (max_pool_1) {Max Pool, 2x2, stride=2, padding=0};
+      \node [c, below = 0.5cm of max_pool_1] (conv2d_2) {Conv2d, 6$\rightarrow$16, 5x5, padding=0};
+      \node [a, below = 0.5cm of conv2d_2] (relu_2) {ReLU};
+      \node [p, below = 0.5cm of relu_2] (max_pool_2) {Max Pool, 2x2, stride=2, padding=0};
+      \node [f, below = 0.5cm of max_pool_2] (fc1) {Fully Connected, 16x5x5$\rightarrow$120};
+      \node [a, below = 0.5cm of fc1] (relu_3) {ReLU};
+      \node [f, below = 0.5cm of relu_3] (fc2) {Fully Connected, 120$\rightarrow$84};
+      \node [a, below = 0.5cm of fc2] (relu_4) {ReLU};
+      \node [f, below = 0.5cm of relu_4] (fc3) {Fully Connected, 84$\rightarrow$10};
+      \node [a, below = 0.5cm of fc3] (softmax) {SoftMax};
+      % Deep Network
+      \draw [->] (conv2d_1) -- (relu_1);
+      \draw [->] (relu_1) -- (max_pool_1);
+      \draw [->] (max_pool_1) -- (conv2d_2);
+
+      \draw [->] (conv2d_2) -- (relu_2);
+      \draw [->] (relu_2) -- (max_pool_2);
+      \draw [->] (max_pool_2) -- (fc1);
+
+      \draw [->] (fc1) -- (relu_3);
+      \draw [->] (relu_3) -- (fc2);
+      \draw [->] (fc2) -- (relu_4);
+      \draw [->] (relu_4) -- (fc3);
+
+      \draw [->] (fc3) -- (softmax);
+    \end{tikzpicture}
+  \end{center}
 
 \end{frame}
 
