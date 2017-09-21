@@ -113,6 +113,93 @@
 % ----------------------------------------------------------------------------------------
 
 % ------------------------------------------------
+\section{Basic Tensorflow}
+
+\begin{frame}
+  \frametitle{Remarks about Tensorflow}
+  \begin{itemize}
+  \item Quite overwhelming, especially for those new to the library.
+  \item There is multiple ways of doing the same thing.
+  \item Very different way of thinking vs. other libraries.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nice Things about Tensorflow}
+  \begin{itemize}
+  \item Very fast computation on GPUs (nearly $~80x$ faster than CPU).
+  \item Great distributed support for \textbf{large} clusters ($\geq 8$ GPUs).
+  \item Many available implementations.
+  \end{itemize}
+\end{frame}
+
+\subsection{Computational Graphs}
+
+\begin{frame}
+  \frametitle{Tensorflow ``Quirks''/Vocabulary}
+  \begin{itemize}
+  \item \underline{Define and Run}, instead of immediate feedback.
+  \item \underline{Placeholders} to transfer data into the computational graph.
+  \item \underline{Variables} for values/weights we want to learn.
+  \item \underline{Ops} to operate on individual Variables/Values
+  \item \underline{Session} to allocate the computational graph, and assign values
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Computational Graphs}
+  \begin{itemize}
+  \item Let's say we want to compute some values, given variables $x$, $y$, and $z$.
+  \item $x \in \mathcal{R}^{2 \times 3}$
+  \item $y \in \mathcal{R}^{3 \times 1}$
+  \item $z \in \mathcal{R}^{2 \times 1}$
+  \item Let's try to compute \textsc{Mean}$(xy + z)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Matrix Multiplication}
+  Let's attempt to compute $xy$ first.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Matrix Multiplication}
+  \begin{itemize}
+  \item Easy in numpy.
+  \item Little more involved in Tensorflow.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example}
+  Let's now calculate the rest of \textsc{Mean}$(xy + z)$, first in Numpy, then Tensorflow
+\end{frame}
+
+\begin{frame}
+  \frametitle{NumPy Example}
+\end{frame}
+
+\begin{frame}
+  \frametitle{NumPy Example -- Conclusion}
+  \begin{itemize}
+  \item ``Works as expected''
+  \item Values are immediate
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tensorflow Example}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Tensorflow Example -- Conclusion}
+  \begin{itemize}
+  \item Values are not immediate
+  \item You need to initialize variables
+  \item You need to initialize a session before you can retrieve values
+  \end{itemize}
+\end{frame}
+
 \section{Review: Supervised Learning} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
 % ------------------------------------------------
 
@@ -123,7 +210,7 @@
   \item We have some dataset $d \thicksim \mathcal{D}$.
   \item $d$ contains a bunch of points, $x_i$ and $y_i$, where $x_i$ is the $i$th datapoint and $y_i$ is the $i$th label
   \item You can think of $x_i$ as an image, and $y_i$ being the corresponding label.
-  \item Given enough $x_i$s and $y_i$s, is it possible to accurately predict $\hat{y}$ for some foreign, unseen inputs $\hat{x}$?
+  \item Given enough $x_i$'s and $y_i$'s, is it possible to accurately predict $\hat{y}$ for some foreign, unseen inputs $\hat{x}$?
   \end{itemize}
 \end{frame}
 
@@ -175,42 +262,46 @@
 % ------------------------------------------------
 
 % ------------------------------------------------
-
-\section{Tensorflow}
-\subsection{Computational Graphs}
-
+\section{Classification in Tensorflow}
+\subsection{Loss Functions}
 \begin{frame}
-  \frametitle{Desired Computation}
-  % \begin{block}{Block 1}
-  %   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-  % \end{block}
-
-  % \begin{block}{Block 2}
-  %   Pellentesque sed tellus purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum quis magna at risus dictum tempor eu vitae velit.
-  % \end{block}
-
-  % \begin{block}{Block 3}
-  %   Suspendisse tincidunt sagittis gravida. Curabitur condimentum, enim sed venenatis rutrum, ipsum neque consectetur orci, sed blandit justo nisi ac lacus.
-  % \end{block}
-  \begin{itemize}
-    \item Let's say we want to compute some values, given variables $x$, $y$, and $z$.
-    \item $x \in \mathcal{R}^{2 \times 3}$
-    \item $y \in \mathcal{R}^{3 \times 1}$
-    \item $z \in \mathcal{R}^{3 \times 2}$
-    \item We want to compute $\frac{1}{n}\Sigma(x+y)z$
-  \end{itemize}
+  \frametitle{MSE Loss}
+  \begin{block}{MSE Loss Function}
+    We want to optimize the average distance between our predictions, so we want \\
+    $$\text{minimize } \frac{1}{n}\sum_{i=0}^{n}(f(x_i) - y_i)^2$$
+  \end{block}
+\end{frame}
+\begin{frame}
+  \frametitle{Cross Entropy Loss Function}
+  \begin{block}{Cross Entropy Loss Function}
+    We want to optimize the probability outputs, so we want \\
+    $$\text{minimize } -\sum_{c=0}^C(\hat{y_{ic}}log(y_{ic}))$$
+    for individual datapoints. \\
+    $C$ is the total number of classes, and $y_{ic}$ gives the $i$th datapoint and probability of the $c$th class.
+  \end{block}
 \end{frame}
 
+\section{Tensorflow }
 \begin{frame}
-  \frametitle{Tensorflow ``Quirks''}
-  \begin{itemize}
-  \item \underline{Define and Run}, instead of immediate feedback.
-  \item \underline{Placeholders} to transfer data into the computational graph.
-  \item \underline{Variables} for values/weights we want to learn.
-  \end{itemize}
+
 \end{frame}
+
+
+
+
 % ------------------------------------------------
 
+% \begin{block}{Block 1}
+%   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
+% \end{block}
+
+% \begin{block}{Block 2}
+%   Pellentesque sed tellus purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum quis magna at risus dictum tempor eu vitae velit.
+% \end{block}
+
+% \begin{block}{Block 3}
+%   Suspendisse tincidunt sagittis gravida. Curabitur condimentum, enim sed venenatis rutrum, ipsum neque consectetur orci, sed blandit justo nisi ac lacus.
+% \end{block}
 \begin{frame}
   \frametitle{Multiple Columns}
   \begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
