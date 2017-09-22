@@ -319,21 +319,28 @@
 \end{frame}
 
 \begin{frame}
+  \begin{block}{Note!}
+    Note -- slight bug in diagram, the image size is 28x28, not 32x32. \\
+    The next slide shows the LeNet architecture that we will implement.
+  \end{block}
+\end{frame}
+
+\begin{frame}
   \frametitle{LeNet Architecture (in more detail)}
-  \tikzstyle{c} = [rectangle, draw, fill=blue!20, node distance=1cm, text width=6em, text centered]
-  \tikzstyle{p} = [rectangle, draw, fill=purple!20, node distance=1cm, text width=6em, text centered]
-  \tikzstyle{f} = [rectangle, draw, fill=green!20, node distance=1cm, text width=6em, text centered]
-  \tikzstyle{a} = [rectangle, draw, fill=red!20, node distance=1cm, text width=6em, text centered]
+  \tikzstyle{c} = [rectangle, draw, fill=blue!20, node distance=1cm, text width=20em, text centered]
+  \tikzstyle{p} = [rectangle, draw, fill=purple!20, node distance=1cm, text width=20em, text centered]
+  \tikzstyle{f} = [rectangle, draw, fill=green!20, node distance=1cm, text width=20em, text centered]
+  \tikzstyle{a} = [rectangle, draw, fill=red!20, node distance=1cm, text width=20em, text centered]
 
   \begin{center}
-    \begin{tikzpicture}[scale=0.3, every node/.style={transform shape}]
-      \node [c] (conv2d_1) {Conv2d, 1$\rightarrow$6, 5x5, padding=0};
+    \begin{tikzpicture}[scale=0.5, every node/.style={transform shape}]
+      \node [c] (conv2d_1) {Conv2d, 1$\rightarrow$6, 5x5, padding=``VALID''};
       \node [a, below = 0.5cm of conv2d_1] (relu_1) {ReLU};
-      \node [p, below = 0.5cm of relu_1] (max_pool_1) {Max Pool, 2x2, stride=2, padding=0};
-      \node [c, below = 0.5cm of max_pool_1] (conv2d_2) {Conv2d, 6$\rightarrow$16, 5x5, padding=0};
+      \node [p, below = 0.5cm of relu_1] (max_pool_1) {Max Pool, 2x2, stride=2, padding=``VALID''};
+      \node [c, below = 0.5cm of max_pool_1] (conv2d_2) {Conv2d, 6$\rightarrow$16, 5x5, padding=``VALID''};
       \node [a, below = 0.5cm of conv2d_2] (relu_2) {ReLU};
-      \node [p, below = 0.5cm of relu_2] (max_pool_2) {Max Pool, 2x2, stride=2, padding=0};
-      \node [f, below = 0.5cm of max_pool_2] (fc1) {Fully Connected, 16x5x5$\rightarrow$120};
+      \node [p, below = 0.5cm of relu_2] (max_pool_2) {Max Pool, 2x2, stride=2, padding=``VALID''};
+      \node [f, below = 0.5cm of max_pool_2] (fc1) {Fully Connected, 16x4x4$\rightarrow$120};
       \node [a, below = 0.5cm of fc1] (relu_3) {ReLU};
       \node [f, below = 0.5cm of relu_3] (fc2) {Fully Connected, 120$\rightarrow$84};
       \node [a, below = 0.5cm of fc2] (relu_4) {ReLU};
